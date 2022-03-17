@@ -1,10 +1,10 @@
-experiment_directory: /homes/abrace/tmp/deepdrivemd_tests/bba_test/test_experiment_2
+experiment_directory: /files0/oddite/deepdrivemd/runs/bba_test/test_experiment_1
 stage_idx: 0
 task_idx: 0
-output_path: /homes/abrace/tmp/deepdrivemd_tests/bba_test/test_experiment_2/molecular_dynamics_runs/stage0000/task0000
+output_path: /files0/oddite/deepdrivemd/runs/bba_test/test_experiment_1/molecular_dynamics_runs/stage0000/task0000
 node_local_path: null
-pdb_file: /homes/abrace/tmp/deepdrivemd_tests/bba_test/inputs/system/1FME-unfolded.pdb
-initial_pdb_dir: /homes/abrace/tmp/deepdrivemd_tests/bba_test/inputs
+pdb_file: /files0/oddite/deepdrivemd/deepdrivemd/data/bba/system/1FME-unfolded.pdb
+initial_pdb_dir: null
 solvent_type: implicit
 top_suffix: null
 simulation_length_ns: 1.0
@@ -13,7 +13,7 @@ dt_ps: 0.002
 temperature_kelvin: 310.0
 heat_bath_friction_coef: 1.0
 wrap: false
-reference_pdb_file: /homes/abrace/tmp/deepdrivemd_tests/bba_test/inputs/1FME-folded.pdb
+reference_pdb_file: /files0/oddite/deepdrivemd/deepdrivemd/data/bba/1FME-folded.pdb
 openmm_selection:
 - CA
 mda_selection: protein and name CA
