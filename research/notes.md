@@ -16,6 +16,28 @@ Enabling productive and performant application coupling to generate converged wo
   3. Generate templates that improve locality of rproducer/consumer tasks (new mapping) and use hierarchical staging to exploit locality
 
 
+Workflow assessment and questions
+=============================================================================
+
+* Opportunities:
+  - [big] exploit locality: direct, neighborhoods
+
+  - [some] prefetching
+    
+  - [some] write buffering
+
+  - [future] more task asynchrony and overlap
+
+
+* Questions
+  - Lifecycle of data
+    - dependence types (read/write)
+    - data sizes/volume
+    - access patterns
+    - locality patterns
+
+  - Task memory pressure (potential for memory-based staging)
+
 
 Comparing ADIOS and RADICAL
 =============================================================================
