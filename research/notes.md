@@ -16,18 +16,21 @@ Enabling productive and performant application coupling to generate converged wo
   3. Generate templates that improve locality of rproducer/consumer tasks (new mapping) and use hierarchical staging to exploit locality
 
 
-Workflow assessment and questions
+Potential for performance improvement & Workflow assessment
 =============================================================================
 
-* Opportunities:
-  - [big] exploit locality: direct, neighborhoods
+* Opportunities when combining task placement and staging
+  - Big: Ensure locality when realizing dependences
+    - where to stage: i.e., here, near, remote (when forced)
+    - what to stage: i.e., subsets of output to avoid whole-file dependency
 
-  - [some] prefetching
-    
-  - [some] write buffering
+    - locality types: direct, neighborhoods
 
-  - [future] more task asynchrony and overlap
+  - Possibly big: write elimination for unnecessary/unused data
 
+  - Some: Prefetching
+  
+  - Little: Write buffering
 
 * Questions
   - Lifecycle of data
@@ -35,7 +38,7 @@ Workflow assessment and questions
     - data sizes/volume
     - access patterns
     - locality patterns
-
+    
   - Task memory pressure (potential for memory-based staging)
 
 
