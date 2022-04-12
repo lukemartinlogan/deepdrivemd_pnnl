@@ -19,7 +19,7 @@ Enabling productive and performant application coupling to generate converged wo
 Potential for performance improvement & Workflow assessment
 =============================================================================
 
-* Opportunities when combining task placement and staging
+* Opportunities: Combining task placement and staging
   - Big: Ensure locality when realizing dependences
     - where to stage: i.e., here, near, remote (when forced)
     - what to stage: i.e., subsets of output to avoid whole-file dependency
