@@ -61,9 +61,10 @@ Comparing ADIOS and RADICAL
      pipe buffers, after which producer operations block (or drop values).
     
   6. Pipes are implemented with special files ('bp' file)
-  
+
   ? Does a consumer obtain a signal? Presumably a simple consumer gets a signal (probably via inotify)?
-  
+  > [hyungro] No, a consumer uses a Poll method to check new data but it might be possible to obtain a signal
+
   ? If so, presumably the aggregator task runs on every consumer notify. But since it doesn't know if all logical incoming dependence edges have been resolved, it manually checks for a full set of bp files.
   
   ? Is there any locality between producer and consumer?
@@ -76,6 +77,7 @@ Comparing ADIOS and RADICAL
   ? Does Radical permit a "dependence" to have multiple values? Presumably no.
   
   ? Does Radical have a notion of signaling a consumer task? Presumably "no" as the notion of "signal" is different from "launch task with the assumption that input files are available". That is, in Radical, an aggregator task is launched when all inputs are available.
+  > [hyungro] No signaling mechanism is correct in general, but it looks like there are/were experimental features through zmq which provide pub/sub and push/pull types. for example, [this](https://github.com/radical-cybertools/radical.pilot/blob/devel/examples/misc/rp_app_master.py) and [that](https://github.com/radical-cybertools/radical.utils/tree/devel/src/radical/utils/zmq)
   
   ? Implication: ADIOS could permit the simulation to complete much more quickly than with Radical, but the overall logical critical path is the same. The critical path with ADIOS may be more efficient by avoiding file system more.
 
