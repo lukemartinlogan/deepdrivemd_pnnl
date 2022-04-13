@@ -64,11 +64,12 @@ Comparing ADIOS and RADICAL
      run at different rates than consumers. One can set a limit on the
      pipe buffers, after which producer operations block (or drop values).
     
-  4. Pipes are implemented with special files ('bp' file)
+  4. Pipes are implemented with special files ('bp', 'sst' file)
 
   5. At joins, consumers must check that all incoming dependence edges have been resolved.
 
   ? Can a consumer check for a new value in a bp file? Or just the bp file's existence?
+  > Yes, a consumer can check whether it has a new value to read. For more details, [the read_step method](https://github.com/DeepDriveMD/DeepDriveMD-pipeline/blob/c0073303a824b66fe1d0b64a53ad76bfde223848/deepdrivemd/data/stream/adios_utils.py#L44) and [the adios BeginStep](https://adios2.readthedocs.io/en/latest/components/components.html?#beginstep)
 
   ? Is there any locality between producer and consumer?
 
@@ -78,9 +79,12 @@ Comparing ADIOS and RADICAL
   - I think (1) is the same as with ADIOS.
   
   ? Does Radical permit a "dependence" to have multiple values? Presumably no.
+  > Radical provides a callback to make sure `n` tasks are finished before moving to the next phase, i.e., EnTK's stage post_exec, and the related example is [here](https://radicalentk.readthedocs.io/en/stable/adv_examples/adapt_ta.html). However, this feature isn't exactly to permit a "dependence". Radical model provides a task placement only, and the data management is responsible by a user application, how to implement coupling or dependence. 
+
   
   ? Does Radical have a notion of signaling a consumer task? Presumably "no" as the notion of "signal" is different from "launch task with the assumption that input files are available". That is, in Radical, an aggregator task is launched when all inputs are available.
   > [hyungro] No signaling mechanism is correct in general, but it looks like there are/were experimental features through zmq which provide pub/sub and push/pull types. for example, [this](https://github.com/radical-cybertools/radical.pilot/blob/devel/examples/misc/rp_app_master.py) and [that](https://github.com/radical-cybertools/radical.utils/tree/devel/src/radical/utils/zmq)
   
   ? Implication: ADIOS could permit the simulation to complete much more quickly than with Radical, but the overall logical critical path is the same. The critical path with ADIOS may be more efficient by avoiding file system more.
+  > True. The concept of using Adios is for in situ/online analysis workflow, where simulation and analysis run simulatenously and the network communication is one of the means to reduce file i/o overhead. In comparison, Radical model is a traditional/offiline workflow.
 
