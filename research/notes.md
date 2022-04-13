@@ -6,27 +6,17 @@ Vision
 
 Enabling productive and performant application coupling to generate converged workflows on distributed and heterogeneous computing platforms. Performance monitoring and analysis of data movement and locality to develop execution feedback templates to workflow runtime that reduce data access bottlenecks.
 
-* Assumptions:
-  - workflow tasks uses files for coupling
-  - workflow (or workflow manager) correctly manages file dependences
 
-* Outline:
-  1. Capture data flow graph
-  2. Assess producer/consumer locality
-  3. Generate templates that improve locality of rproducer/consumer tasks (new mapping) and use hierarchical staging to exploit locality
-
-
-Potential for performance improvement & Workflow assessment
+Potential for performance improvement
 =============================================================================
 
 * Opportunities: Combine task placement and staging. Remain within I/O
   interface.
 
   - Big: Ensure locality when realizing dependences
+    - locality types: direct, neighborhoods
     - where to stage: i.e., here, near, remote (when forced)
     - what to stage: i.e., subsets of output to avoid whole-file dependency
-
-    - locality types: direct, neighborhoods
 
   - Possibly big: write elimination for unnecessary/unused data
 
@@ -34,14 +24,50 @@ Potential for performance improvement & Workflow assessment
   
   - Little: Write buffering
 
-* Questions
-  - Lifecycle of data
-    - dependence types (read/write)
-    - data sizes/volume
-    - access patterns
-    - locality patterns
-    
+
+Workflow characterization for task placement and staging
+=============================================================================
+
+* Outline:
+  0. Assume:
+    - workflow tasks use file-based coupling
+    - workflow manages task dependences
+
+  1. Capture and characterize data flow graph
+  2. Identify opportunities for data locality
+  3. Generate templates to improve data locality via task placement/staging
+  
+
+1. Capture and characterize data flow graph
+   (With RADICAL, an explicit dependence graph is already available.)
+
+  - Characterization:
+    - dependence types (see below) for locality patterns of
+      dependences: e.g., direct, neighborhoods
+
+    - data sizes/volume for importance of dependence
+
+    - future: 
+      dependence precision (eg, portion of file is read)
+      data access patterns within file (how to stage each file)
+
+
+  - Dependence types:
+    - series:       single-writer, single reader
+    - fork/fan-out: single-writer, multiple reader
+    - join/fan-in:  aggregation/reduction
+    - fork+join
+
   - Task memory pressure (potential for memory-based staging)
+
+
+2. Identify opportunities for data locality
+
+   - Generate RADICAL tags to affect scheduler's task placement
+
+
+3. Generate templates to improve data locality via task placement/staging
+
 
 
 Comparing ADIOS and RADICAL
@@ -64,7 +90,6 @@ RADICAL
    - By default, tasks execute on any available node
    - User can assign tags to tasks and request that only certain nodes
      execute certain tags.
-  
 
 
 ADIOS (+ RADICAL) model
@@ -73,7 +98,7 @@ ADIOS (+ RADICAL) model
 1. Scheduling:
    - Reserve some nodes for ADIOS servers
    - RADICAL schedules tasks as dependences are resolved (bp-files)
-  
+
 2. Dependencies are implemented with producer/consumer pipes with one
    producer and one consumer.
 
