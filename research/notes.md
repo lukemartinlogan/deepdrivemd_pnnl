@@ -63,11 +63,14 @@ Workflow characterization for task placement and staging
 
 2. Identify opportunities for data locality
 
+   - Analyze loclaity patterns
    - Generate RADICAL tags to affect scheduler's task placement
-
 
 3. Generate templates to improve data locality via task placement/staging
 
+   - Instantiate Hermes (or Tazer) daemons
+   - Run workflow with adjusted RADICAL task schedule/mappings
+   - Template provides hints to improve staging (what and where)
 
 
 Comparing ADIOS and RADICAL
