@@ -70,7 +70,6 @@ RADICAL
 ADIOS (+ RADICAL) model
 ----------------------------------------
 
-
 1. Scheduling:
    - Reserve some nodes for ADIOS servers
    - RADICAL schedules tasks as dependences are resolved (bp-files)
