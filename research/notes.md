@@ -19,7 +19,9 @@ Enabling productive and performant application coupling to generate converged wo
 Potential for performance improvement & Workflow assessment
 =============================================================================
 
-* Opportunities: Combining task placement and staging
+* Opportunities: Combine task placement and staging. Remain within I/O
+  interface.
+
   - Big: Ensure locality when realizing dependences
     - where to stage: i.e., here, near, remote (when forced)
     - what to stage: i.e., subsets of output to avoid whole-file dependency
@@ -52,24 +54,22 @@ Comparing ADIOS and RADICAL
      join/fork operator implemented by the user as an
      aggregator/duplicator.
   
-  2. Dependencies are implemented with producer consumer pipes.
-  
-  3. Producer/consumer pipes have one producer and one consumer.
+  2. Dependencies are implemented with producer/consumer pipes with
+     one producer and one consumer.
 
-  4. Producer operations are blocking in that they can only return when
-     their value is copied to the pipe.
+     - Producers block until their value is copied to the pipe
+     - Consumers poll (block) (i.e., no notify as in publish/subscribe)
   
-  5. A pipe can hold multiple producer values. This means producers can
+  3. A pipe can hold multiple producer values. This means producers can
      run at different rates than consumers. One can set a limit on the
      pipe buffers, after which producer operations block (or drop values).
     
-  6. Pipes are implemented with special files ('bp' file)
+  4. Pipes are implemented with special files ('bp' file)
 
-  ? Does a consumer obtain a signal? Presumably a simple consumer gets a signal (probably via inotify)?
-  > [hyungro] No, a consumer uses a Poll method to check new data but it might be possible to obtain a signal
+  5. At joins, consumers must check that all incoming dependence edges have been resolved.
 
-  ? If so, presumably the aggregator task runs on every consumer notify. But since it doesn't know if all logical incoming dependence edges have been resolved, it manually checks for a full set of bp files.
-  
+  ? Can a consumer check for a new value in a bp file? Or just the bp file's existence?
+
   ? Is there any locality between producer and consumer?
 
 
