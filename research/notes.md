@@ -31,7 +31,7 @@ Workflow characterization for task placement and staging
 * Outline:
   0. Assume:
     - workflow tasks use file-based coupling
-    - workflow manages task dependences
+    - workflow manages task dependencies
 
   1. Capture and characterize data flow graph
   2. Identify opportunities for data locality
@@ -43,7 +43,7 @@ Workflow characterization for task placement and staging
 
   - Characterization:
     - dependence types (see below) for locality patterns of
-      dependences: e.g., direct, neighborhoods
+      dependencies: e.g., direct, neighborhoods
 
     - data sizes/volume for importance of dependence
 
@@ -63,7 +63,7 @@ Workflow characterization for task placement and staging
 
 2. Identify opportunities for data locality
 
-   - Analyze loclaity patterns
+   - Analyze locality patterns
    - Generate RADICAL tags to affect scheduler's task placement
 
 3. Generate templates to improve data locality via task placement/staging
