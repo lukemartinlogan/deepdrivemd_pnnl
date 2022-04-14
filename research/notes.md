@@ -130,3 +130,4 @@ ADIOS (+ RADICAL) model
    have been resolved.
 
 [[Question]] If RADICAL is managing scheduling, why are there aggregators that poll on their source data?
+> While the simulations keep running in the ADIOS model, the aggregator needs to find out if there are new data to process proactively i.e., polling. In RADICAL only model, the aggregator presumes that new data (files) produced from the simulation, as earlier tasks (simulation) were terminated to come to itself in the workflow pipeline. 
