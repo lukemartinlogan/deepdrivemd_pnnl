@@ -66,7 +66,7 @@ Workflow characterization for task placement and staging
    - Analyze locality patterns
    - Generate RADICAL tags to affect scheduler's task placement
    
-   - tag each vertex, 
+   - tag each vertex, ie, equivalence class of vertices
 
 3. Generate templates to improve data locality via task placement/staging
 
