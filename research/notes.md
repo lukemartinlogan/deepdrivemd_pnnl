@@ -65,6 +65,8 @@ Workflow characterization for task placement and staging
 
    - Analyze locality patterns
    - Generate RADICAL tags to affect scheduler's task placement
+   
+   - tag each vertex, 
 
 3. Generate templates to improve data locality via task placement/staging
 
@@ -85,6 +87,8 @@ RADICAL
    conceptual joins or forks must be appropriately converted and the
    join/fork operator implemented by the user as an
    aggregator/duplicator.
+   
+   Tasks are nodes. Files are edges.
    
    > Radical provides a callback to make sure `n` tasks are finished before moving to the next phase, i.e., EnTK's stage post_exec, and the related example is [here](https://radicalentk.readthedocs.io/en/stable/adv_examples/adapt_ta.html). However, this feature isn't exactly to permit a "dependence". Radical model provides a task placement only, and the data management is responsible by a user application, how to implement coupling or dependence.
 
