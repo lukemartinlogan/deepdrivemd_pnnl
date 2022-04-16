@@ -75,6 +75,18 @@ Workflow characterization for task placement and staging
    - Template provides hints to improve staging (what and where)
 
 
+* Related Work
+
+  - Flux: Overcoming Scheduling Challenges for Exascale Workflows:
+    https://ieeexplore.ieee.org/abstract/document/8638377
+
+  - Scalable I/O-Aware Job Scheduling for Burst Buffer Enabled HPC Clusters: schedule tasks based on a model of I/O contention
+    https://dl.acm.org/doi/10.1145/2907294.2907316
+
+  - PRIONN: Prediction Runtime and IO using Neural Networks
+    https://doi.org/10.1145/3225058.3225091
+
+
 Comparing ADIOS and RADICAL
 =============================================================================
 
