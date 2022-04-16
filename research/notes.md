@@ -57,6 +57,11 @@ Workflow characterization for task placement and staging
     - fork/fan-out: single-writer, multiple reader
     - join/fan-in:  aggregation/reduction
     - fork+join
+    
+    - Recognize input dependences: multiple tasks reading the same
+      input file where the file has no predecessor because it exists
+      at execution beginning.
+
 
   - Task memory pressure (potential for memory-based staging)
 
