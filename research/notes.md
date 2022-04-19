@@ -121,19 +121,19 @@ ADIOS (+ RADICAL) model
 
 1. Scheduling:
    - Reserve some nodes for ADIOS servers
-   - RADICAL schedules tasks as dependences are resolved (bp-files)
+   - RADICAL schedules tasks as dependences are resolved (bp-file, ADIOS 1)
 
-2. Dependencies are implemented with producer/consumer pipes with one
-   producer and one consumer.
+2. Dependencies are implemented with producer/consumer pipes (put/get)
+   with one producer and one consumer.
 
    - Producers block until their value is copied to the pipe
 
    - Consumers poll (block) until a new value (record) is available.
-     No notify as in publish-subscribe.
+     No notify as in publish/subscribe.
      
      > Check for new value: [the read_step method](https://github.com/DeepDriveMD/DeepDriveMD-pipeline/blob/c0073303a824b66fe1d0b64a53ad76bfde223848/deepdrivemd/data/stream/adios_utils.py#L44) and [the adios BeginStep](https://adios2.readthedocs.io/en/latest/components/components.html?#beginstep)
      
-   - Pipes are implemented with special files (bp-file)
+   - Pipes are implemented with special files (bp-file, ADIOS 1)
   
 3. A pipe can hold multiple producer values. This means producers can
    run at different rates than consumers. One can set a limit on the
