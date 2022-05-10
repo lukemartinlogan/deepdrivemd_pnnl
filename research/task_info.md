@@ -2,9 +2,9 @@
 | Task type	| Task Script | Input file(s) | Output file(s) | 
 | --------- | ----------- | ------------- | -------------- |  
 | Simulation | run_openmm.py | .pdb | .dcd, .h5, .chk | 
-| Aggregation | aggregate.py | .h5 | .h5 | 
-| Training | train.py | .h5 | .pt, .json | 
-| Agent (Outlier) | agent.py | .pt, .dcd | .pdb, .json | 
+| Aggregation | aggregate.py | .h5 files | .h5 | 
+| Training | train.py | .h5 | .pt files, .json files | 
+| Agent (Outlier) | agent.py | .pt files, .dcd files | .pdb files, .json | 
 
 ## Record Size with Sample Dataset
 
