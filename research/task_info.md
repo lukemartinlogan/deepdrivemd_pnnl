@@ -5,6 +5,7 @@
 | Aggregation | aggregate.py | .h5 files | .h5 | 
 | Training | train.py | .h5 | .pt files, .json files | 
 | Agent (Outlier) | agent.py | .pt files, .dcd files | .pdb files, .json | 
+- `files` meaning multiple input/output files
 
 ## Record Size with Sample Dataset
 
