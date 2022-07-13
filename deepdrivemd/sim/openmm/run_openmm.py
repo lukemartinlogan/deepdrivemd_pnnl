@@ -153,7 +153,6 @@ def configure_reporters(
         )
     )
 
-
 def run_simulation(cfg: OpenMMConfig):
 
     # openmm typed variables
