@@ -107,6 +107,14 @@ class SimEmulator:
 
         return u
 
+    def pdbfile(self, structure, fname=None):
+
+        if fname is None:
+            fname = "{}.pdb".format(self.output_filename)
+
+        #TBD
+        Path(fname).touch()
+
     def h5_setting(self, 
             output_filename, 
             is_contact_map, 
@@ -152,7 +160,7 @@ def main():
             is_fnc = args.fnc)
 
     for i in range(obj.n_jobs):
-        task_dir = "task{:04d}/".format(i)
+        task_dir = "molecular_dynamics_runs/stage0000/task{:04d}/".format(i)
         Path(task_dir).mkdir(parents=True, exist_ok=True)
         cms = obj.contact_maps()
         pcs = obj.point_clouds()
@@ -163,6 +171,7 @@ def main():
         dcd = obj.trajectories()
         if dcd is not None:
             obj.dcdfile(dcd, task_dir + obj.output_filename + ".dcd")#f"_ins_{i}.dcd")
+        obj.pdbfile(None, task_dir + "dummy.pdb")#obj.output_filename + ".pdb")
     print("total bytes written:{} in {} file(s)".format(obj.nbytes, i + 1))
 
 
