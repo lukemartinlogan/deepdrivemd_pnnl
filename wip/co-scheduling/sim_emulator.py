@@ -2,6 +2,7 @@ import scipy.sparse
 import argparse
 import numpy as np
 import h5py
+from pathlib import Path
 try:
     import MDAnalysis as mda
 except:
@@ -124,7 +125,7 @@ def user_input():
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--residue', type=int, required=True)
     parser.add_argument('-a', '--atom', type=int)
-    parser.add_argument('-f', '--frame', default=100)
+    parser.add_argument('-f', '--frame', default=100, type=int)
     parser.add_argument('-n', '--number_of_jobs', default=1, type=int)
     parser.add_argument('--fnc', default=True)
     parser.add_argument('--rmsd', default=True)
@@ -151,15 +152,17 @@ def main():
             is_fnc = args.fnc)
 
     for i in range(obj.n_jobs):
+        task_dir = "task{:04d}/".format(i)
+        Path(task_dir).mkdir(parents=True, exist_ok=True)
         cms = obj.contact_maps()
         pcs = obj.point_clouds()
         if cms is not None:
-            obj.h5file(cms, 'contact_map', obj.output_filename + f"_ins_{i}.h5")
+            obj.h5file(cms, 'contact_map', task_dir + obj.output_filename + ".h5")# + f"_ins_{i}.h5")
         if pcs is not None:
-            obj.h5file(pcs, 'point_cloud', obj.output_filename + f"_ins_{i}.h5")
+            obj.h5file(pcs, 'point_cloud', task_dir + obj.output_filename + ".h5")#f"_ins_{i}.h5")
         dcd = obj.trajectories()
         if dcd is not None:
-            obj.dcdfile(dcd, obj.output_filename + f"_ins_{i}.dcd")
+            obj.dcdfile(dcd, task_dir + obj.output_filename + ".dcd")#f"_ins_{i}.dcd")
     print("total bytes written:{} in {} file(s)".format(obj.nbytes, i + 1))
 
 
