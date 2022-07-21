@@ -51,6 +51,8 @@ def concatenate_last_n_h5(args):
             data["point_cloud"][:, 0:3, :].astype(np.float128), axis=2, keepdims=True
         ).astype(np.float32)
         data["point_cloud"][:, 0:3, :] -= cms
+        if args.dtype:
+            data['point_cloud'] = data['point_cloud'].astype(args.dtype)
 
     # Create new dsets from concatenated dataset
     for field, concat_dset in data.items():
@@ -92,6 +94,7 @@ def parse_args() -> argparse.Namespace:
     )'''
     parser.add_argument('--verbose', action='store_true')
     parser.add_argument('--output_path')
+    parser.add_argument('--dtype', "output dtype to cast")
 
     args = parser.parse_args()
     return args
