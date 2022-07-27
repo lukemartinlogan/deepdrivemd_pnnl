@@ -2,6 +2,7 @@ import h5py
 import argparse
 import numpy as np
 from deepdrivemd.data.api import DeepDriveMD_API
+from adios_prodcons import AdiosProducerConsumer
 
 def concatenate_last_n_h5(args):
 
@@ -84,10 +85,10 @@ def concatenate_last_n_h5(args):
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument('-no_pc', '--no-point_cloud', action='store_true', help='collect "point_cloud" dataset')
-    parser.add_argument('-no_cm', '--no-contact_map', action='store_true', help='collect "contact_map" dataset')
-    parser.add_argument('-no_rmsd', '--no-root-mean-square-deviation', dest='no_rmsd', action='store_true', help='collect "contact_map" dataset')
-    parser.add_argument('-no_fnc', '--no-fraction_of_contacts', dest='no_fnc', action='store_true', help='collect "contact_map" dataset')
+    parser.add_argument('-no_pc', '--no-point_cloud', action='store_true', help='Skip to collect "point_cloud" dataset')
+    parser.add_argument('-no_cm', '--no-contact_map', action='store_true', help='Skip to collect "contact_map" dataset')
+    parser.add_argument('-no_rmsd', '--no-root-mean-square-deviation', dest='no_rmsd', action='store_true', help='Skip to collect "rmsd" dataset')
+    parser.add_argument('-no_fnc', '--no-fraction_of_contacts', dest='no_fnc', action='store_true', help='Skip collect "fnc" dataset')
     parser.add_argument("--input_path")
     '''parser.add_argument(
             'input', metavar='N', type=str, nargs='+', help='h5 file(s)'
@@ -95,6 +96,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--verbose', action='store_true')
     parser.add_argument('--output_path')
     parser.add_argument('--dtype', "output dtype to cast")
+    parser.add_argument('--adios', help='read adios "bp" files to aggregate')
 
     args = parser.parse_args()
     return args

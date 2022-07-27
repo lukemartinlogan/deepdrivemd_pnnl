@@ -3,6 +3,8 @@ import argparse
 import numpy as np
 import h5py
 from pathlib import Path
+import os
+from adios_prodcons import AdiosProducerConsumer
 try:
     import MDAnalysis as mda
 except:
@@ -14,7 +16,8 @@ class SimEmulator:
             n_residues = 50, 
             n_atoms = 500, 
             n_frames = 100, 
-            n_jobs = 1):
+            n_jobs = 1,
+            adios_on = False):
 
         self.n_residues = n_residues
         self.n_atoms = n_atoms
@@ -22,6 +25,15 @@ class SimEmulator:
         self.n_jobs = n_jobs
         self.nbytes = 0
         self.universe = None
+        self.adios_on = adios_on
+        self.adios_init()
+
+    def adios_init(self):
+
+        if self.adios_on is True:
+            adios = AdiosProducerConsumer()
+            adios.setup_conn()
+            self.adios = adios
 
     def contact_map(self, density=None, dtype='int16'):
 
@@ -115,12 +127,12 @@ class SimEmulator:
         #TBD
         Path(fname).touch()
 
-    def h5_setting(self, 
-            output_filename, 
-            is_contact_map, 
-            is_point_cloud,
-            is_rmsd, 
-            is_fnc):
+    def output_settings(self, 
+            output_filename=None, 
+            is_contact_map=True, 
+            is_point_cloud=True,
+            is_rmsd=True, 
+            is_fnc=True):
         if output_filename is None:
            self.output_filename = "residue_{}".format(self.n_residues)
         self.is_contact_map = is_contact_map
@@ -140,7 +152,8 @@ def user_input():
     parser.add_argument('--contact_map', default=True)
     parser.add_argument('--point_cloud', default=True)
     parser.add_argument('--trajectory', default=False)
-    parser.add_argument('--output_filename')
+    parser.add_argument('--output_filename', default=None)
+    parser.add_argument('--adios', action='store_true', default=False)
     args = parser.parse_args()
 
     return args
@@ -151,9 +164,10 @@ def main():
     obj = SimEmulator(n_residues = args.residue,
             n_atoms = args.atom,
             n_frames = args.frame,
-            n_jobs= args.number_of_jobs)
+            n_jobs= args.number_of_jobs,
+            adios_on=args.adios)
 
-    obj.h5_setting(output_filename = args.output_filename,
+    obj.output_settings(output_filename = args.output_filename,
             is_contact_map = args.contact_map,
             is_point_cloud = args.point_cloud,
             is_rmsd = args.rmsd,
@@ -164,15 +178,29 @@ def main():
         Path(task_dir).mkdir(parents=True, exist_ok=True)
         cms = obj.contact_maps()
         pcs = obj.point_clouds()
-        if cms is not None:
-            obj.h5file(cms, 'contact_map', task_dir + obj.output_filename + ".h5")# + f"_ins_{i}.h5")
-        if pcs is not None:
-            obj.h5file(pcs, 'point_cloud', task_dir + obj.output_filename + ".h5")#f"_ins_{i}.h5")
+
+        if obj.adios_on is True:
+            # reset file open by task id
+            obj.adios.close_conn()
+            obj.adios.file_path = task_dir + os.path.basename(obj.adios.file_path)
+            obj.adios.stream_path = task_dir + os.path.basename(obj.adios.stream_path)
+            obj.adios.setup_conn()
+            if cms is not None:
+                obj.adios.put({'contact_map': cms})
+            if pcs is not None:
+                obj.adios.put({'point_cloud': pcs})
+        else:
+            if cms is not None:
+                obj.h5file(cms, 'contact_map', task_dir + obj.output_filename + ".h5")# + f"_ins_{i}.h5")
+            if pcs is not None:
+                obj.h5file(pcs, 'point_cloud', task_dir + obj.output_filename + ".h5")#f"_ins_{i}.h5")
+
         dcd = obj.trajectories()
         if dcd is not None:
             obj.dcdfile(dcd, task_dir + obj.output_filename + ".dcd")#f"_ins_{i}.dcd")
         obj.pdbfile(None, task_dir + "dummy.pdb")#obj.output_filename + ".pdb")
     print("total bytes written:{} in {} file(s)".format(obj.nbytes, i + 1))
+    obj.adios.close_conn() if obj.adios_on else None
 
 
 if __name__ == "__main__":
