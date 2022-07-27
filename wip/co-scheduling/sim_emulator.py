@@ -17,8 +17,7 @@ class SimEmulator:
             n_residues = 50, 
             n_atoms = 500, 
             n_frames = 100, 
-            n_jobs = 1,
-            adios_on = False):
+            n_jobs = 1):
 
         self.n_residues = n_residues
         self.n_atoms = n_atoms
@@ -26,15 +25,20 @@ class SimEmulator:
         self.n_jobs = n_jobs
         self.nbytes = 0
         self.universe = None
-        self.adios_on = adios_on
-        self.adios_init()
 
-    def adios_init(self):
+    def set_adios(self, sst, bp):
 
+        self.adios_on = sst or bp
         if self.adios_on is True:
-            adios = AdiosProducerConsumer()
-            adios.setup_conn()
-            self.adios = adios
+            self.adios_init(sst, bp)
+
+    def adios_init(self, sst=True, bp=True):
+
+        adios = AdiosProducerConsumer()
+        adios.set_engine({"sst":sst})
+        adios.set_engine({"bp":bp})
+        adios.setup_conn()
+        self.adios = adios
 
     def contact_map(self, density=None, dtype='int16'):
 
@@ -154,7 +158,8 @@ def user_input():
     parser.add_argument('--point_cloud', default=True)
     parser.add_argument('--trajectory', default=False)
     parser.add_argument('--output_filename', default=None)
-    parser.add_argument('--adios', action='store_true', default=False)
+    parser.add_argument('--adios-sst', action='store_true', default=False)
+    parser.add_argument('--adios-bp', action='store_true', default=False)
     args = parser.parse_args()
 
     return args
@@ -166,8 +171,9 @@ if __name__ == "__main__":
     obj = SimEmulator(n_residues = args.residue,
             n_atoms = args.atom,
             n_frames = args.frame,
-            n_jobs= args.number_of_jobs,
-            adios_on=args.adios)
+            n_jobs= args.number_of_jobs)
+
+    obj.set_adios(args.adios_sst, args.adios_bp)
 
     obj.output_settings(output_filename = args.output_filename,
             is_contact_map = args.contact_map,
