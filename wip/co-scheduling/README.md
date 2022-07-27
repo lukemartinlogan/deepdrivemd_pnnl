@@ -200,7 +200,7 @@ drwxr-xr-x 2 leeh736 users  31 Jul 26 22:15 .
 ...
 ```
 
-### File naming for `bpp`
+### File naming for `bp`
 
 `bp` engine creates a sub-directory with a naming convention `trajectory.bp`
 like:
