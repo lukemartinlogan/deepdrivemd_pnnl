@@ -5,6 +5,7 @@ import h5py
 from pathlib import Path
 import os
 from adios_prodcons import AdiosProducerConsumer
+from multiprocessing import Pool
 try:
     import MDAnalysis as mda
 except:
@@ -158,7 +159,8 @@ def user_input():
 
     return args
 
-def main():
+
+if __name__ == "__main__":
 
     args = user_input()
     obj = SimEmulator(n_residues = args.residue,
@@ -173,7 +175,8 @@ def main():
             is_rmsd = args.rmsd,
             is_fnc = args.fnc)
 
-    for i in range(obj.n_jobs):
+    def runs(i):
+
         task_dir = "molecular_dynamics_runs/stage0000/task{:04d}/".format(i)
         Path(task_dir).mkdir(parents=True, exist_ok=True)
         cms = obj.contact_maps()
@@ -194,14 +197,17 @@ def main():
                 obj.h5file(cms, 'contact_map', task_dir + obj.output_filename + ".h5")# + f"_ins_{i}.h5")
             if pcs is not None:
                 obj.h5file(pcs, 'point_cloud', task_dir + obj.output_filename + ".h5")#f"_ins_{i}.h5")
-
+    #
         dcd = obj.trajectories()
         if dcd is not None:
             obj.dcdfile(dcd, task_dir + obj.output_filename + ".dcd")#f"_ins_{i}.dcd")
         obj.pdbfile(None, task_dir + "dummy.pdb")#obj.output_filename + ".pdb")
-    print("total bytes written:{} in {} file(s)".format(obj.nbytes, i + 1))
+        return task_dir
+
+
+    #for i in range(obj.n_jobs):
+    with Pool(obj.n_jobs) as p:
+        print(p.map(runs, list(range(obj.n_jobs))))
+    print("total bytes written:{} in {} file(s)".format(obj.nbytes, obj.n_jobs))
     obj.adios.close_conn() if obj.adios_on else None
 
-
-if __name__ == "__main__":
-    main()
