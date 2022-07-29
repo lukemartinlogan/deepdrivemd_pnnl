@@ -6,6 +6,7 @@ from pathlib import Path
 import os
 from adios_prodcons import AdiosProducerConsumer
 from multiprocessing import Pool
+import time
 try:
     import MDAnalysis as mda
 except:
@@ -87,6 +88,8 @@ class SimEmulator:
             dtype = h5py.vlen_dtype(np.dtype(data[0].dtype))
 
         with h5py.File(fname, "a", swmr=False) as h5_file:
+            if ds_name in h5_file:
+                del h5_file[ds_name]
             h5_file.create_dataset(
                     ds_name,
                     data=data,
@@ -188,32 +191,46 @@ if __name__ == "__main__":
         cms = obj.contact_maps()
         pcs = obj.point_clouds()
 
+        times = []
+
         if obj.adios_on is True:
             # reset file open by task id
             obj.adios.close_conn()
             obj.adios.file_path = task_dir + os.path.basename(obj.adios.file_path)
             obj.adios.stream_path = task_dir + os.path.basename(obj.adios.stream_path)
             obj.adios.setup_conn()
+            times.append(time.time())
             if cms is not None:
                 obj.adios.put({'contact_map': cms})
             if pcs is not None:
                 obj.adios.put({'point_cloud': pcs})
+            times.append(time.time())
         else:
             if cms is not None:
                 obj.h5file(cms, 'contact_map', task_dir + obj.output_filename + ".h5")# + f"_ins_{i}.h5")
             if pcs is not None:
                 obj.h5file(pcs, 'point_cloud', task_dir + obj.output_filename + ".h5")#f"_ins_{i}.h5")
     #
+        if obj.adios_on is True:
+            obj.adios.close_conn()
         dcd = obj.trajectories()
         if dcd is not None:
             obj.dcdfile(dcd, task_dir + obj.output_filename + ".dcd")#f"_ins_{i}.dcd")
         obj.pdbfile(None, task_dir + "dummy.pdb")#obj.output_filename + ".pdb")
-        return task_dir
+
+        print (max(times) - min(times), min(times), max(times) ) 
+        return task_dir, obj.nbytes
 
 
     #for i in range(obj.n_jobs):
     with Pool(obj.n_jobs) as p:
-        print(p.map(runs, list(range(obj.n_jobs))))
-    print("total bytes written:{} in {} file(s)".format(obj.nbytes, obj.n_jobs))
+        res = (p.map(runs, list(range(obj.n_jobs))))
+    files = []
+    fbytes = 0
+    for fname, fbyte in res:
+        files.append(fname)
+        fbytes += fbyte
+
+    print("total bytes written:{} in {} file(s)".format(fbytes, obj.n_jobs))
     obj.adios.close_conn() if obj.adios_on else None
 

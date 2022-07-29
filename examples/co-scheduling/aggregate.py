@@ -95,7 +95,7 @@ def parse_args() -> argparse.Namespace:
     )'''
     parser.add_argument('--verbose', action='store_true')
     parser.add_argument('--output_path')
-    parser.add_argument('--dtype', "output dtype to cast")
+    parser.add_argument('--dtype', help='output dtype to cast')
     parser.add_argument('--adios', help='read adios "bp" files to aggregate')
 
     args = parser.parse_args()
