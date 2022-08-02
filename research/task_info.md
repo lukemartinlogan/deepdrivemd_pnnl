@@ -2,6 +2,9 @@
 
 There are four tasks to complete a single iteration starting from `Simulation` to `Agent` in a logical order. The following table shows input/output files types that each task script requires/produces. HDF5 is commonly used across the tasks.
 
+![ddmd](/research/figures/ddmd_diagram.png)
+
+
 | Order | Task type	| Task Script | Input file(s) | Output file(s) | Input/Output File Count |
 | ----- | --------- | ----------- | ------------- | -------------- | ------------- |
 | 1     | Simulation | [run_openmm.py](/deepdrivemd/sim/openmm/run_openmm.py) | .pdb | .dcd, .h5, .chk | 1 (input) : 3 (output) | 
@@ -54,6 +57,8 @@ A number of tasks is presented below for the main components which can scale fro
 ## Estimated Data Volumes with Common User Settings (accumulated size in MB)
 
 Data volumes can be affected by user settings, and the table below for SMALL/MEDIUM dataset is provided to get close estimate with user settings. The values e.g., 10 iterations with 12:1 aggregation ratio and three concurrent network models have been broadly used according to the experience.
+
+![Simulation-Aggregation](/research/figures/sim_agg_relation.png)
 
 User Settings:
 * time step: 10
