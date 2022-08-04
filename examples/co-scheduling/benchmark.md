@@ -21,3 +21,43 @@
 
 
 ## `bench.sh` script
+
+The pseudo code of testing 100MB/200MB/400MB/800MB sizes across 1,2,4 and 8 number of jobs look like:
+``
+for mbyte in 100 200 400 800
+do
+   for njob in 1 2 4 8
+   do
+       for type in 'co-sched' 'shared-file' 'adios'
+       do
+           python sim_emulator.py -n $njob -f ( $mbyte / $njob ) -n $njob ...(suppressed)...
+           python aggregate.py ...(suppressed)...
+       done
+   done
+done
+```
+
+### Sample Command lines
+
+With a fixed number of elements (frames, 10k):
+
+- 100MB of h5: `python sim_emulator.py --residue 100 -a 1000 -f 10000 -n 1`
+- 200MB of h5: `python sim_emulator.py --residue 145 -a 1000 -f 10000 -n 1`
+- 400MB of h5: `python sim_emulator.py --residue 210 -a 1000 -f 10000 -n 1`
+- 800MB of h5: `python sim_emulator.py --residue 295 -a 1000 -f 10000 -n 1`
+
+With a same size of elements but increased number of elements:
+
+- 100MB of h5: `python sim_emulator.py --residue 100 -a 1000 -f 10000 -n 1`
+- 200MB of h5: `python sim_emulator.py --residue 100 -a 1000 -f 20000 -n 1`
+- 400MB of h5: `python sim_emulator.py --residue 100 -a 1000 -f 40000 -n 1`
+- 800MB of h5: `python sim_emulator.py --residue 100 -a 1000 -f 80000 -n 1`
+
+
+
+## ADIOS Run
+simulation output (consumer)
+`sst` for the streaming, and `bp` for file store.
+```
+python sim_emulator.py --residue 100 -n 12 -a 1000 -f 10000 --adios-bp --adios-sst
+```

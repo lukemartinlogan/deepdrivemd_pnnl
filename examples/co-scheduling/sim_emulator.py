@@ -218,7 +218,7 @@ if __name__ == "__main__":
             obj.dcdfile(dcd, task_dir + obj.output_filename + ".dcd")#f"_ins_{i}.dcd")
         obj.pdbfile(None, task_dir + "dummy.pdb")#obj.output_filename + ".pdb")
 
-        print (max(times) - min(times), min(times), max(times) ) 
+        #print (max(times) - min(times), min(times), max(times) ) 
         return task_dir, obj.nbytes
 
 
