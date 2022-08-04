@@ -143,6 +143,22 @@ drwxr-xr-x 3 leeh736 users  150 Jul 15 09:35 .
 ```
 We can assume that `contact_map` is generally 7-8 times bigger in data size.
 
+### Sample Command lines
+
+With a fixed number of elements (frames, 10k):
+
+- 100MB of h5: `python sim_emulator.py --residue 100 -a 1000 -f 10000 -n 1`
+- 200MB of h5: `python sim_emulator.py --residue 145 -a 1000 -f 10000 -n 1`
+- 400MB of h5: `python sim_emulator.py --residue 210 -a 1000 -f 10000 -n 1`
+- 800MB of h5: `python sim_emulator.py --residue 295 -a 1000 -f 10000 -n 1`
+
+With a same size of elements but increased number of elements:
+
+- 100MB of h5: `python sim_emulator.py --residue 100 -a 1000 -f 10000 -n 1`
+- 200MB of h5: `python sim_emulator.py --residue 100 -a 1000 -f 20000 -n 1`
+- 400MB of h5: `python sim_emulator.py --residue 100 -a 1000 -f 40000 -n 1`
+- 800MB of h5: `python sim_emulator.py --residue 100 -a 1000 -f 80000 -n 1`
+
 
 ## Required Packages
 The following python packages are required for these scripts:
