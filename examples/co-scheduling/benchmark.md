@@ -23,7 +23,8 @@
 ## `bench.sh` script
 
 The pseudo code of testing 100MB/200MB/400MB/800MB sizes across 1,2,4 and 8 number of jobs look like:
-``
+
+```
 for mbyte in 100 200 400 800
 do
    for njob in 1 2 4 8
