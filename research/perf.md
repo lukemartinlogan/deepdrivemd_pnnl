@@ -15,6 +15,6 @@ Apart from the file-based implementation above (batch style), asynchronous exeuc
 
 This figure is borrowed from the IPDPS paper[1] to show the resource utilization over time.
 
-![perf-gantt](/research/figures/perf_gantt.png)
+![perf-gantt](/research/figures/perf_comp_gantt.png)
 
 [1] Brace, Alexander, Igor Yakushin, Heng Ma, Anda Trifan, Todd Munson, Ian Foster, Arvind Ramanathan, Hyungro Lee, Matteo Turilli, and Shantenu Jha. "Coupling streaming AI and HPC ensembles to achieve 100–1000× faster biomolecular simulations." In 2022 IEEE International Parallel and Distributed Processing Symposium (IPDPS), pp. 806-816. IEEE, 2022.
