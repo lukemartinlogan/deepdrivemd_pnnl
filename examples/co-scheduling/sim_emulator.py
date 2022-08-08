@@ -94,7 +94,6 @@ class SimEmulator:
                     ds_name,
                     data=data,
                     dtype=dtype,
-                    fletcher32=True,
                     chunks=True
                     )
 
