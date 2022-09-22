@@ -2,6 +2,7 @@ import scipy.sparse
 import argparse
 import numpy as np
 import h5py
+#from mpi4py import MPI
 from pathlib import Path
 import os
 from adios_prodcons import AdiosProducerConsumer
@@ -11,6 +12,7 @@ try:
     import MDAnalysis as mda
 except:
     mda = None
+
 
 class SimEmulator:
 
@@ -87,7 +89,15 @@ class SimEmulator:
         elif data.dtype == object:
             dtype = h5py.vlen_dtype(np.dtype(data[0].dtype))
 
+
+        #with h5py.File(fname, "a", swmr=False,  driver='mpio', comm=MPI.COMM_WORLD) as h5_file:
+        #    h5_file.atomic = True
         with h5py.File(fname, "a", swmr=False) as h5_file:
+            try:
+                shape = (data.shape)
+            except:
+                shape = (data[0].shape)
+
             if ds_name in h5_file:
                 del h5_file[ds_name]
             h5_file.create_dataset(
@@ -144,6 +154,8 @@ class SimEmulator:
             is_fnc=True):
         if output_filename is None:
            self.output_filename = "residue_{}".format(self.n_residues)
+        else:
+            self.output_filename = output_filename
         self.is_contact_map = is_contact_map
         self.is_point_cloud = is_point_cloud
         self.is_rmsd = is_rmsd
@@ -223,7 +235,12 @@ if __name__ == "__main__":
         return task_dir, obj.nbytes
 
 
-    #for i in range(obj.n_jobs):
+    res = []
+    '''
+    for i in range(obj.n_jobs):
+        r = runs(i)
+        res.append(r)
+    '''
     with Pool(obj.n_jobs) as p:
         res = (p.map(runs, list(range(obj.n_jobs))))
     files = []

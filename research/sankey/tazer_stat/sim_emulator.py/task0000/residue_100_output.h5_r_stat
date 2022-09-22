@@ -1,6 +1,7 @@
-molecular_dynamics_runs/stage0000/task0000/residue_100_output.h5 Block no. Frequency
-0 6
-1 6
-2 1
-9284 1
-9285 1
+molecular_dynamics_runs/stage0000/task0000/residue_100_output.h5 Block no. Frequency Access size in byte
+0 6 8
+1 6 8
+2 1 512
+9318 1 328
+9319 1 328
+9320 1 328

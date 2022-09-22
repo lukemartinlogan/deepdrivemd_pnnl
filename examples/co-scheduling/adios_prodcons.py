@@ -1,4 +1,7 @@
-import adios2
+try:
+    import adios2
+except:
+    adios=None
 
 class AdiosProducerConsumer:
     cfg_path = "./adios_cfg/"
