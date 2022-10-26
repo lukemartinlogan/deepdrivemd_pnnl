@@ -16,6 +16,11 @@ except:
 
 class SimEmulator:
 
+    fnc_low_b = .5
+    fnc_high_b = .9
+    rmsd_low_b = 5
+    rmsd_high_b = 9
+
     def __init__(self, 
             n_residues = 50, 
             n_atoms = 500, 
@@ -79,6 +84,15 @@ class SimEmulator:
         pcs = [ self.point_cloud() for x in range(self.n_frames) ]
         return pcs
 
+    def _rand(self, low_b, high_b, size, dtype='f2'):
+        return np.random.uniform(low=low_b, high=high_b, size=(size,)).astype(dtype)
+
+    def fnc(self):
+        return self._rand(self.fnc_low_b, self.fnc_high_b, self.n_frames)
+
+    def rmsd(self):
+        return self._rand(self.rmsd_low_b, self.rmsd_high_b, self.n_frames)
+
     def h5file(self, data, ds_name, fname=None):
 
         if fname is None:
@@ -88,7 +102,8 @@ class SimEmulator:
             dtype = data[0].dtype
         elif data.dtype == object:
             dtype = h5py.vlen_dtype(np.dtype(data[0].dtype))
-
+        else:
+            dtype = data.dtype
 
         #with h5py.File(fname, "a", swmr=False,  driver='mpio', comm=MPI.COMM_WORLD) as h5_file:
         #    h5_file.atomic = True
@@ -203,6 +218,8 @@ if __name__ == "__main__":
         Path(task_dir).mkdir(parents=True, exist_ok=True)
         cms = obj.contact_maps()
         pcs = obj.point_clouds()
+        rmsd = obj.rmsd()
+        fnc = obj.fnc()
 
         times = []
 
@@ -217,12 +234,21 @@ if __name__ == "__main__":
                 obj.adios.put({'contact_map': cms})
             if pcs is not None:
                 obj.adios.put({'point_cloud': pcs})
+            if fnc is not None:
+                obj.adios.put({'fnc': fnc})
+            if rmsd is not None:
+                obj.adios.put({'rmsd': rmsd})
             times.append(time.time())
         else:
             if cms is not None:
                 obj.h5file(cms, 'contact_map', task_dir + obj.output_filename + ".h5")# + f"_ins_{i}.h5")
             if pcs is not None:
                 obj.h5file(pcs, 'point_cloud', task_dir + obj.output_filename + ".h5")#f"_ins_{i}.h5")
+            if rmsd is not None:
+                obj.h5file(rmsd, 'rmsd', task_dir + obj.output_filename + ".h5")#f"_ins_{i}.h5")
+            if fnc is not None:
+                obj.h5file(fnc, 'fnc', task_dir + obj.output_filename + ".h5")#f"_ins_{i}.h5")
+
     #
         if obj.adios_on is True:
             obj.adios.close_conn()
