@@ -95,6 +95,16 @@ Reference vs. CPU: 6.30456e-06
 All differences are within tolerance.
 ```
 
+Example (on bluesky):
+```
+source /share/apps/python/miniconda3.7/etc/profile.d/conda.sh
+conda activate /files0/oddite/conda/ddmd/
+mkdir test_run
+cd test_run
+python /files0/oddite/deepdrivemd/src/deepdrivemd/sim/openmm/run_openmm.py -c /files0/oddite/deepdrivemd/src/test/bba/md_direct.yml
+```
+
+
 ### PyTorch/TensorFlow
 
 Please follow the general documentation: https://pytorch.org/docs/stable/index.html or https://www.tensorflow.org/install/pip
