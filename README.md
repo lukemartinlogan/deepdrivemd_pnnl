@@ -16,7 +16,7 @@ The shared repo is currently located in the path below:
 /files0/oddite/deepdrivemd/src
 ```
 
-### shared project path e.g. accessible via marianas
+### NFS Path (shared project /qfs/...)
 
 ```
 /qfs/projects/oddite/deepdrivemd/
@@ -24,7 +24,7 @@ The shared repo is currently located in the path below:
 
 ### Conda environment
 
-Necessary packages are currently provided via conda environment.
+Necessary packages are currently provided via this conda environment.
 
 ```
 source /share/apps/python/miniconda3.7/etc/profile.d/conda.sh
@@ -62,6 +62,12 @@ For example, the bluesky setting can be executed:
 python -m deepdrivemd.deepdrivemd -c test/bba/bluesky-md-simulation.yaml 
 ```
 with proper changes to the settings. E.g., It needs to make sure that the `experiment_directory` does not exist prior to the run, as overwriting is not expected. Empty directory should be given.
+
+### MD Run (direct invocation without RADICAL)
+
+```
+python /files0/oddite/deepdrivemd/src/deepdrivemd/sim/openmm/run_openmm.py -c /files0/oddite/deepdrivemd/src/test/bba/md_direct.yml
+```
 
 ## Required Software/Tools
 

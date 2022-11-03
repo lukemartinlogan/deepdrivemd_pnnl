@@ -2,7 +2,7 @@ title: BBA example
 resource: local.localhost 
 queue: pbatch
 schema_: local
-project: null
+project: bluesky_md
 walltime_min: 30
 max_iteration: 4
 cpus_per_node: 40
