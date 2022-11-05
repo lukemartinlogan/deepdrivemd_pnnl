@@ -66,6 +66,8 @@ with proper changes to the settings. E.g., It needs to make sure that the `exper
 ### MD Run (direct invocation without RADICAL)
 
 ```
+# source /share/apps/python/miniconda3.7/etc/profile.d/conda.sh
+# conda activate /files0/oddite/conda/ddmd/
 python /files0/oddite/deepdrivemd/src/deepdrivemd/sim/openmm/run_openmm.py -c /files0/oddite/deepdrivemd/src/test/bba/md_direct.yml
 ```
 
@@ -93,15 +95,6 @@ Median difference in forces between platforms:
 Reference vs. CPU: 6.30456e-06
 
 All differences are within tolerance.
-```
-
-Example (on bluesky):
-```
-source /share/apps/python/miniconda3.7/etc/profile.d/conda.sh
-conda activate /files0/oddite/conda/ddmd/
-mkdir test_run
-cd test_run
-python /files0/oddite/deepdrivemd/src/deepdrivemd/sim/openmm/run_openmm.py -c /files0/oddite/deepdrivemd/src/test/bba/md_direct.yml
 ```
 
 
