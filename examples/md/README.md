@@ -1,6 +1,6 @@
 # Example of OpenMM Simulation
 
-DeepDriveMD workflow uses the OpenMM tool for MD simulation and this page provides a quick example to run the MD simulation individually. First example is to run a simulation with basic user parameters such as number of simulation steps and hardware platforms to use i.e., CPU or CUDA. This is based on the OpenMM official website: http://docs.openmm.org/latest/userguide/application/02_running_sims.html#a-first-example, but a convenient way to control user input parameters.
+DeepDriveMD workflow uses the [OpenMM tool](https://openmm.org/) for MD simulation and this page provides a quick example to run the MD simulation individually. First example is to run a simulation with basic user parameters such as number of simulation steps and hardware platforms to use i.e., CPU or CUDA. This is based on the OpenMM official website: http://docs.openmm.org/latest/userguide/application/02_running_sims.html#a-first-example, but a convenient way to control user input parameters.
 
 
 ## Installation
@@ -49,7 +49,7 @@ Namespace(i='input.pdb', s=5000, r=1000, p='CPU', device='0', precision='double'
 1000,-142543.12210898878,285.55191155652125
 2000,-140161.39202585924,300.57551662963766
 3000,-140555.47244848614,299.7316835009928
-4000,-140221.554517121,297.9402501439115
+4000,-************7121,297.9402501439115
 5000,-140626.19196714423,299.9589626210362
 ```
 
