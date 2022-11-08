@@ -53,6 +53,13 @@ Namespace(i='input.pdb', s=5000, r=1000, p='CPU', device='0', precision='double'
 5000,-140626.19196714423,299.9589626210362
 ```
 
+And the timing on Bluesky (48 Xeon CPUs @ 2.60GHz) takes about 1 minute for 5000 steps:
+```
+real    1m16.086s
+user    15m31.793s
+sys     1m11.165s
+```
+
 ## Threads on CPU
 
 According to the official documentation, the number of CPU threads can be adjusted using the environment variable, and the example script here override the environment variable by the user input like:

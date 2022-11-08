@@ -31,7 +31,7 @@ def get_argparse():
     parser.add_argument("-p", help="CPU|GPU", default="CPU")
     parser.add_argument("--device", help="GPU Device Index(es)", default="0")
     parser.add_argument("--precision", help="precision", default="double")
-    parser.add_argument("--OPENMM_CPU_THREADS", help="number of threads in CPU", default=None, type=int)
+    parser.add_argument("--OPENMM_CPU_THREADS", help="number of threads in CPU", default="")
     args = parser.parse_args()
     return args
 
