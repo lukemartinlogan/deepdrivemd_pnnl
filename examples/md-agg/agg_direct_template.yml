@@ -1,0 +1,7 @@
+rmsd: True
+fnc: True
+contact_map: True
+point_clud: True
+experiment_directory: ./
+output_path: aggregation_runs/stage0000/task0000/aggregated.h5
+last_n_h5_files: $MD_CNT
