@@ -69,3 +69,32 @@ system/system:
 - system: input data 
 - aggregation_runs/stageXXXX/taskXXXX: output path of aggregation task
 - molecular_dynamics_runs/stageXXXX/taskXXXX: output path of md task
+
+### 2 MD processes and Aggregation
+
+```
+$ ./md_agg_example.sh 2 2 # indicating 2 md processes and 2 output .h5 files to aggregate
+
+```
+
+The default settings (`md_direct_template.yml`) are 0.1 ns simulation time steps with 1ps reporter steps `simulation_length_ns: 0.1` and `report_interval_ps: 1.0` which will generate 100 records in the hdf5 dataset, for example, two h5 files are produced and 1 aggregated file contains 200 records:
+
+```
+
+$ h5ls molecular_dynamics_runs/stage0000/task0000/stage0000_task0000.h5
+contact_map              Dataset {100}
+fnc                      Dataset {100}
+point_cloud              Dataset {100, 3, 28}
+rmsd                     Dataset {100}
+$ h5ls molecular_dynamics_runs/stage0000/task0001/stage0000_task0001.h5
+contact_map              Dataset {100}
+fnc                      Dataset {100}
+point_cloud              Dataset {100, 3, 28}
+rmsd                     Dataset {100}
+$ h5ls aggregation_runs/stage0000/task0000/aggregated.h5
+contact_map              Dataset {200}
+fnc                      Dataset {200}
+point_cloud              Dataset {200, 3, 28}
+rmsd                     Dataset {200}
+
+```
