@@ -126,3 +126,31 @@ point_cloud              Dataset {200, 3, 28}
 rmsd                     Dataset {200}
 
 ```
+
+## Aggregation Only
+
+If you already have output (.h5) files from MD, and wants to aggregate only, the script (aggregate.py) can be called with the configuration file in YAML format.
+
+[Template file](agg_direct_template.yml) is provided which contains:
+```
+rmsd: True
+fnc: True
+contact_map: True
+point_clud: True
+experiment_directory: ./
+output_path: aggregation_runs/stage0000/task0000/aggregated.h5
+last_n_h5_files: $MD_CNT
+```
+
+- rmsd: boolean value to aggregate or not, one of the dataset from md output (Root-mean-square deviation)
+- fnc:  boolean value to aggregate or not, one of the dataset from md output (fraction of contacts)
+- contact_map:  boolean value to aggregate or not, contact map of residues
+- point_cloud:  boolean value to aggregate or not, point clouds for 3d-AAE
+- experiment_directory: path to find all md output (.h5) under DeepDriveMD API, therefore `molecular_dynamics_runs/stageXXXX/taskXXXX` will be followed to find matches
+- output_path: path to save aggregated file in .h5
+- last_n_h5_files: integer, to indicate a number of md output files to aggregate. None for collecting all
+
+Once you have adjusted yaml file ready, the syntax to run the script is like:
+```
+python ./deepdrivemd/aggregation/basic/aggregate.py -c (new yaml filename)
+```
