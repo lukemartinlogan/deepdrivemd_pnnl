@@ -71,6 +71,8 @@ with proper changes to the settings. E.g., It needs to make sure that the `exper
 python /files0/oddite/deepdrivemd/src/deepdrivemd/sim/openmm/run_openmm.py -c /files0/oddite/deepdrivemd/src/test/bba/md_direct.yml
 ```
 
+And the OpenMM example can be found `examples/md`: [README](examples/md/README.md)
+
 ## Required Software/Tools
 
 There are several software packages required to run DeepDriveMD including MD simulation and ML training.
