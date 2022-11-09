@@ -1,10 +1,13 @@
 # MD/Aggregation Example
 
-This page provides an example of running MD/Aggregation tasks from DeepDriveMD workflow.
+This page provides an example of running MD/Aggregation tasks from DeepDriveMD
+workflow.
 
 ## Installation
 
-It will require to install DeepDriveMD specific packages such as OpenMM=7.4.0 and Python 3.7x for the compatibility.
+It will require to install DeepDriveMD specific packages such as OpenMM=7.4.0
+and Python 3.7x for the compatibility. For example, the latest OpenMM 7.7.0 may
+not be backward compatible to DeepDriveMD 0.0.2.
 
 ```
 module load gcc/7.5.0 # gcc 7+ required for Numpy/h5py compiliation
@@ -18,8 +21,9 @@ pip install deepdrivemd
 
 ## Setup
 
-MD/Aggregation tasks (python scripts) are directly called from the local github repository.
-And the example requires to use the environment vabiable to lookup the path:
+MD/Aggregation tasks (python scripts) are directly called from the local github
+repository.  And the example requires to use the environment vabiable to lookup
+the path:
 
 ```
 git clone https://gitlab.pnnl.gov/perf-lab/workflows/deepdrivemd.git
@@ -32,9 +36,12 @@ After this environment is set, MD/Agg tasks are used to call like:
 (agg) python $DDMD_LOCAL_GIT_PATH/aggregation/basic/aggregate.py
 ```
 
-## Run
+## How to Run
 
-The shell script runs MD simulations (`run_openmm.py`) and aggregation (`aggregate.py`) sequentially. And the user parameter specifies how many MD processes will be launched (1st param) and the number of output files (.h5) to aggregate from the simulation (2nd param). For example:
+The shell script is provided to run MD simulations (`run_openmm.py`) and
+aggregation (`aggregate.py`) sequentially. And the user parameter specifies how
+many MD processes will be launched (1st param) and the number of output files
+(.h5) to aggregate from the simulation (2nd param). For example:
 
 ```
 $ bash md_agg_example.sh
@@ -47,7 +54,8 @@ examples:
 Note that "export $DDMD_LOCAL_GIT_PATH=" must be set to locate scripts i.e., run_openmm.py
 ```
 
-The current directory will be a working directory which will create files/sub-directories by following DeepDriveMD API :
+The current directory will be a working directory which will create
+files/sub-directories by following DeepDriveMD API :
 
 ```
 $ ls */*
@@ -70,14 +78,34 @@ system/system:
 - aggregation_runs/stageXXXX/taskXXXX: output path of aggregation task
 - molecular_dynamics_runs/stageXXXX/taskXXXX: output path of md task
 
-### 2 MD processes and Aggregation
+### 2 MD processes and Aggregation (Example)
+
+The following command indicates to run 2 md processes and then aggregate 2
+output .h5 files specifically. The second parameter (for the number of md
+output files to aggregate) can be omitted to aggregate all output files.
 
 ```
-$ ./md_agg_example.sh 2 2 # indicating 2 md processes and 2 output .h5 files to aggregate
-
+$ ./md_agg_example.sh 2 2 
 ```
 
-The default settings (`md_direct_template.yml`) are 0.1 ns simulation time steps with 1ps reporter steps `simulation_length_ns: 0.1` and `report_interval_ps: 1.0` which will generate 100 records in the hdf5 dataset, for example, two h5 files are produced and 1 aggregated file contains 200 records:
+#### Timing
+
+On Bluesky, each md with basic settings e.g. bba input system and 0.1 ns
+simulation time steps would take about 4 minutes:
+
+```
+real    4m34.677s
+user    15m1.858s
+sys     4m46.647s
+```
+
+### Output (.h5) files
+
+The default settings (`md_direct_template.yml`) are 0.1 ns simulation time
+steps with 1ps reporter steps `simulation_length_ns: 0.1` and
+`report_interval_ps: 1.0` which will generate 100 records in the hdf5 dataset,
+for example, two h5 files are produced and 1 aggregated file contains 200
+records:
 
 ```
 

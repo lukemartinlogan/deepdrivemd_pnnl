@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mypid=$$
 argv=("$@")
 argc=$#
 base_path=$(pwd)
@@ -54,11 +55,11 @@ do
     sed -e "s/\$TASKID/${task_id}/" -e "s/\$SYSTEM_PATH/${system_path//\//\\/}/" md_direct_template.yml > $task_yml_path
 done
 
-for task_id in `seq -f "task%04g" 0 $task_cnt`
+for task_id in `seq -f "task%04g" 0 $task_cnt_for_seq`
 do
     md_task_yml_path="${md_base_path}/${task_id}/md_direct_${task_id}.yml"
     echo python $DDMD_LOCAL_GIT_PATH/deepdrivemd/sim/openmm/run_openmm.py -c $md_task_yml_path \&
-    python $DDMD_LOCAL_GIT_PATH/deepdrivemd/sim/openmm/run_openmm.py -c $md_task_yml_path &
+    python $DDMD_LOCAL_GIT_PATH/deepdrivemd/sim/openmm/run_openmm.py -c $md_task_yml_path &> md_${mypid}_${task_id}.log &
 done
 
 # sync
