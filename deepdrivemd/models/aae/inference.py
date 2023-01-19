@@ -87,7 +87,10 @@ def generate_embeddings(
         dataset = shard_dataset(dataset, comm_size, comm_rank)
 
     # Put encoder on specified CPU/GPU
-    device = torch.device(f"cuda:{encoder_gpu}")
+    if torch.cuda.is_available():
+        device = torch.device(f"cuda:{encoder_gpu}")
+    else:
+        device = torch.device("cpu")
     encoder.to(device)
 
     # create data loader

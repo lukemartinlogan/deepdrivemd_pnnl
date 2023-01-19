@@ -25,10 +25,11 @@ from molecules.ml.callbacks import (
 )
 from molecules.ml.unsupervised.point_autoencoder import AAE3d, AAE3dHyperparams
 
+import time
 
 def setup_wandb(
     cfg: AAEModelConfig, model: torch.nn.Module, comm_rank: int
-) -> Optional[wandb.config]:
+    ) :
     # Setup wandb
     wandb_config = None
     if (comm_rank == 0) and (cfg.wandb_project_name is not None):
@@ -61,6 +62,8 @@ def get_h5_training_file(cfg: AAEModelConfig) -> Tuple[Path, List[str]]:
         virtual_name=f"virtual_{cfg.model_tag}",
         node_local_path=cfg.node_local_path,
     )
+    #virtual_h5_path = Path('machine_learning_runs/stage0000/task0000/aggregated.h5')
+    #print(virtual_h5_path)
 
     return virtual_h5_path, h5_files
 
@@ -234,7 +237,10 @@ def main(
         init_weights=init_weights,
     )
 
-    enc_device = torch.device(f"cuda:{encoder_gpu}")
+    if torch.cuda.is_available():
+        enc_device = torch.device(f"cuda:{encoder_gpu}")
+    else:
+        enc_device = torch.device("cpu")
     if comm_size > 1:
         if (encoder_gpu == generator_gpu) and (encoder_gpu == discriminator_gpu):
             aae.model = DDP(
@@ -244,7 +250,8 @@ def main(
             aae.model = DDP(aae.model, device_ids=None, output_device=None)
 
     # set global default device
-    torch.cuda.set_device(enc_device.index)
+    if torch.cuda.is_available():
+        torch.cuda.set_device(enc_device.index)
 
     if comm_rank == 0:
         # Diplay model
@@ -400,6 +407,9 @@ if __name__ == "__main__":
     # set forkserver (needed for summit runs, may cause errors elsewhere)
     # torch.multiprocessing.set_start_method('forkserver', force = True)
 
+    print(time.time())
+
     args = parse_args()
     cfg = AAEModelConfig.from_yaml(args.config)
     main(cfg, args.encoder_gpu, args.generator_gpu, args.decoder_gpu, args.distributed)
+    print(time.time())
