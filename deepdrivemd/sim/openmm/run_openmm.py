@@ -171,7 +171,7 @@ def run_simulation(cfg: OpenMMConfig):
             pdb_file=ctx.pdb_file,
             top_file=ctx.top_file,
             solvent_type=cfg.solvent_type,
-            gpu_index=0,
+            gpu_index=cfg.gpu_idx,
             dt_ps=dt_ps,
             temperature_kelvin=temperature_kelvin,
             heat_bath_friction_coef=cfg.heat_bath_friction_coef,
