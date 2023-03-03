@@ -1,1 +1,1 @@
-[{"model_config":"./inference_stage_test.yaml", "model_checkpoint":""}]
+[{"model_config":"./inference_stage_test.yaml", "model_checkpoint":"$MODEL_CHECKPOINT"}]

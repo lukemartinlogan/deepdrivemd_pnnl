@@ -1,23 +1,25 @@
 #!/bin/bash
 #SBATCH --job-name=deepdrivemd
 #SBATCH --partition=a100
-#SBATCH --account=oddite
-#SBATCH --time=00:30:00
+#SBATCH --account=chess
+#SBATCH --time=00:10:00
 #SBATCH -N 2
 #SBATCH -n 12
 
 
 MD_RUNS=12
-ITER_COUNT=1 # TBD
-SIM_LENGTH=1.6
+ITER_COUNT=5 # TBD
+SIM_LENGTH=0.1
 
 NODE_COUNT=2
 GPU_PER_NODE=6
 MD_START=0
 MD_SLICE=$(($MD_RUNS/$NODE_COUNT))
 NODE_NAMES=`echo $SLURM_JOB_NODELIST|scontrol show hostnames`
+STAGE_IDX=0
+STAGE_IDX_FORMAT=$(seq -f "stage%04g" $STAGE_IDX $STAGE_IDX)
 
-EXPERIMENT_PATH=/qfs/projects/oddite/leeh736/ddmd_runs/test_1600ps
+EXPERIMENT_PATH=/qfs/projects/oddite/leeh736/ddmd_runs/adjusted_ddmd_stages
 DDMD_PATH=/people/leeh736/git/deepdrivemd
 MOLECULES_PATH=/qfs/projects/oddite/leeh736/git/molecules
 
@@ -28,7 +30,7 @@ OPENMM () {
     node_id=$2
     yaml_path=$3
     stage_name="molecular_dynamics"
-    dest_path=$EXPERIMENT_PATH/${stage_name}_runs/stage0000/$task_id
+    dest_path=$EXPERIMENT_PATH/${stage_name}_runs/$STAGE_IDX_FORMAT/$task_id
 
     if [ "$yaml_path" == "" ]
     then
@@ -43,7 +45,7 @@ OPENMM () {
     cd $dest_path
     echo cd $dest_path
 
-    sed -e "s/\$SIM_LENGTH/${SIM_LENGTH}/" -e "s/\$OUTPUT_PATH/${dest_path//\//\\/}/" -e "s/\$EXPERIMENT_PATH/${EXPERIMENT_PATH//\//\\/}/" -e "s/\$DDMD_PATH/${DDMD_PATH//\//\\/}/" -e "s/\$GPU_IDX/${gpu_idx}/" $yaml_path  > $dest_path/$(basename $yaml_path)
+    sed -e "s/\$SIM_LENGTH/${SIM_LENGTH}/" -e "s/\$OUTPUT_PATH/${dest_path//\//\\/}/" -e "s/\$EXPERIMENT_PATH/${EXPERIMENT_PATH//\//\\/}/" -e "s/\$DDMD_PATH/${DDMD_PATH//\//\\/}/" -e "s/\$GPU_IDX/${gpu_idx}/" -e "s/\$STAGE_IDX/${STAGE_IDX}/" $yaml_path  > $dest_path/$(basename $yaml_path)
     yaml_path=$dest_path/$(basename $yaml_path)
 
     PYTHONPATH=$DDMD_PATH:$MOLECULES_PATH srun -w $node_id -n1 -N1 --exclusive python $DDMD_PATH/deepdrivemd/sim/openmm/run_openmm.py -c $yaml_path &> ${task_id}_${FUNCNAME[0]}.log &
@@ -55,7 +57,9 @@ AGGREGATE () {
 
     task_id=task0000
     stage_name="aggregate"
-    dest_path=$EXPERIMENT_PATH/molecular_dynamics_runs/stage0000/$task_id
+    STAGE_IDX=$(($STAGE_IDX - 1))
+    STAGE_IDX_FORMAT=$(seq -f "stage%04g" $STAGE_IDX $STAGE_IDX)
+    dest_path=$EXPERIMENT_PATH/molecular_dynamics_runs/$STAGE_IDX_FORMAT/$task_id
     yaml_path=$DDMD_PATH/test/bba/${stage_name}_stage_test.yaml
 
 
@@ -63,7 +67,7 @@ AGGREGATE () {
     source activate openmm
 
 
-    sed -e "s/\$SIM_LENGTH/${SIM_LENGTH}/" -e "s/\$OUTPUT_PATH/${dest_path//\//\\/}/" -e "s/\$EXPERIMENT_PATH/${EXPERIMENT_PATH//\//\\/}/" $yaml_path  > $dest_path/$(basename $yaml_path)
+    sed -e "s/\$SIM_LENGTH/${SIM_LENGTH}/" -e "s/\$OUTPUT_PATH/${dest_path//\//\\/}/" -e "s/\$EXPERIMENT_PATH/${EXPERIMENT_PATH//\//\\/}/" -e "s/\$STAGE_IDX/${STAGE_IDX}/" $yaml_path  > $dest_path/$(basename $yaml_path)
     yaml_path=$dest_path/$(basename $yaml_path)
 
     { time PYTHONPATH=~/git/deepdrivemd/ python $DDMD_PATH/deepdrivemd/aggregation/basic/aggregate.py -c $yaml_path ; } &> ${task_id}_${FUNCNAME[0]}.log 
@@ -75,13 +79,13 @@ TRAINING () {
 
     task_id=task0000
     stage_name="machine_learning"
-    dest_path=$EXPERIMENT_PATH/${stage_name}_runs/stage0000/$task_id
+    dest_path=$EXPERIMENT_PATH/${stage_name}_runs/$STAGE_IDX_FORMAT/$task_id
     stage_name="training"
     yaml_path=$DDMD_PATH/test/bba/${stage_name}_stage_test.yaml
 
 
-    mkdir -p $EXPERIMENT_PATH/model_selection_runs/stage0000/task0000/
-    cp -p $DDMD_PATH/test/bba/stage0000_task0000.json $EXPERIMENT_PATH/model_selection_runs/stage0000/task0000/
+    mkdir -p $EXPERIMENT_PATH/model_selection_runs/$STAGE_IDX_FORMAT/task0000/
+    cp -p $DDMD_PATH/test/bba/stage0000_task0000.json $EXPERIMENT_PATH/model_selection_runs/$STAGE_IDX_FORMAT/task0000/${STAGE_IDX_FORMAT}_task0000.json
 
     module load python/miniconda3.7 gcc/7.5.0
     source activate pytorch_sm80
@@ -90,10 +94,11 @@ TRAINING () {
     cd $dest_path
     echo cd $dest_path
 
-    sed -e "s/\$SIM_LENGTH/${SIM_LENGTH}/" -e "s/\$OUTPUT_PATH/${dest_path//\//\\/}/" -e "s/\$EXPERIMENT_PATH/${EXPERIMENT_PATH//\//\\/}/" $yaml_path  > $dest_path/$(basename $yaml_path)
+    sed -e "s/\$SIM_LENGTH/${SIM_LENGTH}/" -e "s/\$OUTPUT_PATH/${dest_path//\//\\/}/" -e "s/\$EXPERIMENT_PATH/${EXPERIMENT_PATH//\//\\/}/" -e "s/\$STAGE_IDX/${STAGE_IDX}/" $yaml_path  > $dest_path/$(basename $yaml_path)
     yaml_path=$dest_path/$(basename $yaml_path)
 
-   PYTHONPATH=~/git/deepdrivemd/:$MOLECULES_PATH python ~/git/deepdrivemd/deepdrivemd/models/aae/train.py -c $yaml_path &> ${task_id}_${FUNCNAME[0]}.log 
+   echo PYTHONPATH=~/git/deepdrivemd/:$MOLECULES_PATH srun -n1 -N1 --exclusive python ~/git/deepdrivemd/deepdrivemd/models/aae/train.py -c $yaml_path ${task_id}_${FUNCNAME[0]}.log 
+   PYTHONPATH=~/git/deepdrivemd/:$MOLECULES_PATH srun -n1 -N1 --exclusive python ~/git/deepdrivemd/deepdrivemd/models/aae/train.py -c $yaml_path &> ${task_id}_${FUNCNAME[0]}.log &
 
 }
 
@@ -101,8 +106,9 @@ INFERENCE () {
 
     task_id=task0000
     stage_name="inference"
-    dest_path=$EXPERIMENT_PATH/${stage_name}_runs/stage0000/$task_id
+    dest_path=$EXPERIMENT_PATH/${stage_name}_runs/$STAGE_IDX_FORMAT/$task_id
     yaml_path=$DDMD_PATH/test/bba/${stage_name}_stage_test.yaml
+    pretrained_model=$DDMD_PATH/data/bba/epoch-130-20201203-150026.pt
 
 
     module load python/miniconda3.7 gcc/7.5.0
@@ -112,15 +118,33 @@ INFERENCE () {
     cd $dest_path
     echo cd $dest_path
 
-    mkdir -p $EXPERIMENT_PATH/agent_runs/stage0000/task0000/
+    mkdir -p $EXPERIMENT_PATH/agent_runs/$STAGE_IDX_FORMAT/task0000/
 
 
-    sed -e "s/\$SIM_LENGTH/${SIM_LENGTH}/" -e "s/\$OUTPUT_PATH/${dest_path//\//\\/}/" -e "s/\$EXPERIMENT_PATH/${EXPERIMENT_PATH//\//\\/}/" $yaml_path  > $dest_path/$(basename $yaml_path)
+    sed -e "s/\$SIM_LENGTH/${SIM_LENGTH}/" -e "s/\$OUTPUT_PATH/${dest_path//\//\\/}/" -e "s/\$EXPERIMENT_PATH/${EXPERIMENT_PATH//\//\\/}/" -e "s/\$STAGE_IDX/${STAGE_IDX}/" $yaml_path  > $dest_path/$(basename $yaml_path)
     yaml_path=$dest_path/$(basename $yaml_path)
+
+    # latest model search
+    model_checkpoint=$(find $EXPERIMENT_PATH/machine_learning_runs/*/*/checkpoint -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -f2- -d" ")
+    if [ "$model_checkpoint" == "" ]
+    then
+        model_checkpoint=$pretrained_model
+    fi
+    STAGE_IDX_PREV=$((STAGE_IDX - 1))
+    STAGE_IDX_FORMAT_PREV=$(seq -f "stage%04g" $STAGE_IDX_PREV $STAGE_IDX_PREV)
+    sed -i -e "s/\$MODEL_CHECKPOINT/${model_checkpoint//\//\\/}/"  $EXPERIMENT_PATH/model_selection_runs/$STAGE_IDX_FORMAT_PREV/task0000/${STAGE_IDX_FORMAT_PREV}_task0000.json
 
 
    OMP_NUM_THREADS=4 PYTHONPATH=~/git/deepdrivemd/:$MOLECULES_PATH  python ~/git/deepdrivemd/deepdrivemd/agents/lof/lof.py -c $yaml_path &> ${task_id}_${FUNCNAME[0]}.log 
 
+}
+
+
+STAGE_UPDATE() {
+
+    STAGE_IDX=$(($STAGE_IDX + 1))
+    tmp=$(seq -f "stage%04g" $STAGE_IDX $STAGE_IDX)
+    echo $tmp
 }
 #
 
@@ -144,20 +168,31 @@ do
         MD_SLICE=$(($MD_RUNS/$NODE_COUNT))
     done
 
+    MD_START=0
+
     wait
+
+    STAGE_IDX_FORMAT="$(STAGE_UPDATE)"
+    STAGE_IDX=$((STAGE_IDX + 1))
+    echo $STAGE_IDX_FORMAT
 
 
     # STAGE 2: Aggregate
-    srun -N1 $( AGGREGATE )
+    #srun -N1 $( AGGREGATE )
 
     wait
 
+    STAGE_IDX_FORMAT="$(STAGE_UPDATE)"
+    STAGE_IDX=$((STAGE_IDX + 1))
+    echo $STAGE_IDX_FORMAT
 
     # STAGE 3: Training
+    TRAINING
 
-    srun -N1 $( TRAINING )
+    STAGE_IDX_FORMAT="$(STAGE_UPDATE)"
+    STAGE_IDX=$((STAGE_IDX + 1))
+    echo $STAGE_IDX_FORMAT
 
-    wait
 
 
     # STAGE 4: Inference
@@ -165,5 +200,9 @@ do
     srun $( INFERENCE )
 
     wait
+
+    STAGE_IDX_FORMAT="$(STAGE_UPDATE)"
+    STAGE_IDX=$((STAGE_IDX + 1))
+    echo $STAGE_IDX_FORMAT
 
 done

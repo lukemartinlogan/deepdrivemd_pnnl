@@ -1,5 +1,5 @@
 experiment_directory: $EXPERIMENT_PATH
-stage_idx: 0
+stage_idx: $STAGE_IDX
 task_idx: 0
 output_path: $OUTPUT_PATH/aggregated.h5
 node_local_path: null

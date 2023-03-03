@@ -216,6 +216,7 @@ def main(cfg: OutlierDetectionConfig, encoder_gpu: int, distributed: bool):
             token = get_model_path(api=api)
             assert token is not None
             model_cfg_path, model_weights_path = token
+            print(model_cfg_path, model_weights_path)
 
     else:
         virtual_h5_file, model_cfg_path, model_weights_path = None, None, None
