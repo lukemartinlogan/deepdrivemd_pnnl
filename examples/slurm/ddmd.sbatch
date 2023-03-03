@@ -6,7 +6,7 @@
 #SBATCH -N 2
 #SBATCH -n 12
 
-
+SHORTENED_PIPELINE=true
 MD_RUNS=12
 ITER_COUNT=5 # TBD
 SIM_LENGTH=0.1
@@ -98,7 +98,12 @@ TRAINING () {
     yaml_path=$dest_path/$(basename $yaml_path)
 
    echo PYTHONPATH=~/git/deepdrivemd/:$MOLECULES_PATH srun -n1 -N1 --exclusive python ~/git/deepdrivemd/deepdrivemd/models/aae/train.py -c $yaml_path ${task_id}_${FUNCNAME[0]}.log 
-   PYTHONPATH=~/git/deepdrivemd/:$MOLECULES_PATH srun -n1 -N1 --exclusive python ~/git/deepdrivemd/deepdrivemd/models/aae/train.py -c $yaml_path &> ${task_id}_${FUNCNAME[0]}.log &
+   if [ "$SHORTENED_PIPELINE" == true ]
+   then
+       PYTHONPATH=~/git/deepdrivemd/:$MOLECULES_PATH srun -n1 -N1 --exclusive python ~/git/deepdrivemd/deepdrivemd/models/aae/train.py -c $yaml_path &> ${task_id}_${FUNCNAME[0]}.log &
+   else
+       PYTHONPATH=~/git/deepdrivemd/:$MOLECULES_PATH srun -n1 -N1 --exclusive python ~/git/deepdrivemd/deepdrivemd/models/aae/train.py -c $yaml_path &> ${task_id}_${FUNCNAME[0]}.log
+   fi
 
 }
 
@@ -126,7 +131,7 @@ INFERENCE () {
 
     # latest model search
     model_checkpoint=$(find $EXPERIMENT_PATH/machine_learning_runs/*/*/checkpoint -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -f2- -d" ")
-    if [ "$model_checkpoint" == "" ]
+    if [ "$model_checkpoint" == "" ] && [ "$SHORTENED_PIPELINE" == true ]
     then
         model_checkpoint=$pretrained_model
     fi
@@ -178,7 +183,10 @@ do
 
 
     # STAGE 2: Aggregate
-    #srun -N1 $( AGGREGATE )
+    if [ "$SHORTENED_PIPELINE" != true ]
+    then
+        srun -N1 $( AGGREGATE )
+    fi
 
     wait
 
@@ -192,7 +200,10 @@ do
     STAGE_IDX_FORMAT="$(STAGE_UPDATE)"
     STAGE_IDX=$((STAGE_IDX + 1))
     echo $STAGE_IDX_FORMAT
-
+    if [ "$SHORTENED_PIPELINE" != true ]
+    then
+        wait
+    fi
 
 
     # STAGE 4: Inference
