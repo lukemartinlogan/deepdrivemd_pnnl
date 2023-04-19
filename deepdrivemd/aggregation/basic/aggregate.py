@@ -1,3 +1,9 @@
+# candice 
+import mpi4py
+mpi4py.rc.initialize = False
+from mpi4py import MPI
+MPI.Init()
+
 import h5py
 import argparse
 import numpy as np
@@ -25,8 +31,8 @@ def concatenate_last_n_h5(cfg: BasicAggegation):
     if cfg.verbose:
         print(f"Collected {len(files)} h5 files.")
 
-    # Open output file
-    fout = h5py.File(cfg.output_path, "w", libver="latest")
+    # # Open output file
+    # fout = h5py.File(cfg.output_path, "w", libver="latest")
 
     # Initialize data buffers
     data = {x: [] for x in fields}
@@ -52,7 +58,12 @@ def concatenate_last_n_h5(cfg: BasicAggegation):
             data["point_cloud"][:, 0:3, :].astype(np.float128), axis=2, keepdims=True
         ).astype(np.float32)
         data["point_cloud"][:, 0:3, :] -= cms
-
+        
+    # candice added for Hermes start
+    # # Open output file only right before itis used
+    fout = h5py.File(cfg.output_path, "w", libver="latest")
+    # candice added for Hermes end
+    
     # Create new dsets from concatenated dataset
     for field, concat_dset in data.items():
         if field == "traj_file":

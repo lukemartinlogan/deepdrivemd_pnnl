@@ -1,3 +1,10 @@
+# candice added for Hermes start
+import mpi4py
+mpi4py.rc.initialize = False
+from mpi4py import MPI
+MPI.Init()
+# candice added for Hermes end
+
 import os
 import json
 import argparse
