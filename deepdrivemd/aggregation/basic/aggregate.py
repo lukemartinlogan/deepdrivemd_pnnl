@@ -1,8 +1,10 @@
-# candice 
-import mpi4py
-mpi4py.rc.initialize = False
-from mpi4py import MPI
-MPI.Init()
+# # candice added for Hermes start
+# # mpi4py is required before Hermes 1.0.0
+# import mpi4py
+# mpi4py.rc.initialize = False
+# from mpi4py import MPI
+# MPI.Init()
+# # candice added for Hermes end
 
 import h5py
 import argparse
