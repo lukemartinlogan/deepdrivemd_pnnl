@@ -1,0 +1,74 @@
+
+devices:
+  ram:
+    mount_point: ""
+    capacity: 40GB
+    block_size: 4KB
+    slab_sizes: [ 4KB, 16KB, 64KB, 1MB ]
+    bandwidth: 6000MBps
+    latency: 15us
+    is_shared_device: false
+    borg_capacity_thresh: [0.0, 1.0]
+
+  ssd:
+    mount_point: "/tmp/ddmd_test_slab1" #"/mnt/nvme/mtang11/hermes_slabs" 
+    capacity: 80GB
+    block_size: 4KB
+    slab_sizes: [ 4KB, 16KB, 64KB, 1MB ]
+    bandwidth: 1000MBps
+    latency: 1200us
+    is_shared_device: false
+    borg_capacity_thresh: [ 0.0, 1.0 ]
+
+  pfs:
+    mount_point: "/tmp/ddmd_test_slab2" #"/mnt/ssd/mtang11/hermes_slabs" 
+    capacity: 80GB
+    block_size: 64KB 
+    slab_sizes: [ 4KB, 16KB, 64KB, 1MB ]
+    bandwidth: 100MBps 
+    latency: 200ms
+    is_shared_device: true
+    borg_capacity_thresh: [ 0.0, 1.0 ]
+
+rpc:
+  host_file: "/home/mtang11/scripts/deepdrivemd/examples/hermes_ddmd/host_ip"
+  host_names: []
+  protocol: "ofi+sockets" #"ofi+verbs"
+  domain: ""
+  port: 8080
+  num_threads: 4
+
+
+buffer_organizer:
+  num_threads: 1
+  port: 8081
+  flush_period: 1024 #1024 2048
+  # blob_reorg_period: 1024 #1024 2048
+  # recency_min: 0
+  # recency_max: 60
+  # freq_max: 15
+  # freq_min: 0
+
+### Define mdm properties
+mdm:
+  # This represents the number of blobs and buckets before collisions start
+  # to happen in the unordered_map tables.
+  # est_blob_count: 5000
+  # est_bucket_count: 5000
+  # est_num_traits: 500
+  est_blob_count: 100000
+  est_bucket_count: 100000
+  est_num_traits: 256
+  
+prefetch:
+  enabled: false
+  apriori_schema_path: ""
+  epoch_ms: 50
+  is_mpi: false
+
+dpe:
+  default_placement_policy: "MinimizeIoTime"
+  default_rr_split: 0
+
+shmem_name: "/hermes_shm_"
+system_view_state_update_interval_ms: 1000

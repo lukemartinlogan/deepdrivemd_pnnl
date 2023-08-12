@@ -1,0 +1,23 @@
+/home/mtang11/miniconda3/envs/hermes_openmm7_ddmd/lib/python3.7/site-packages/MDAnalysis/coordinates/chemfiles.py:108: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
+  MIN_CHEMFILES_VERSION = LooseVersion("0.9")
+/home/mtang11/scripts/deepdrivemd/deepdrivemd/aggregation/basic/aggregate.py:79: DeprecationWarning: `np.object` is a deprecated alias for the builtin `object`. To silence this warning, use `object` by itself. Doing this will not modify any behavior and is safe. 
+Deprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations
+  if concat_dset.dtype != np.object:
+Collected 12 h5 files.
+Reading /home/mtang11/experiments/ddmd_runs/test_100ps_i1_nfs1/molecular_dynamics_runs/stage0000/task0000/stage0000_task0000.h5
+Reading /home/mtang11/experiments/ddmd_runs/test_100ps_i1_nfs1/molecular_dynamics_runs/stage0000/task0001/stage0000_task0001.h5
+Reading /home/mtang11/experiments/ddmd_runs/test_100ps_i1_nfs1/molecular_dynamics_runs/stage0000/task0002/stage0000_task0002.h5
+Reading /home/mtang11/experiments/ddmd_runs/test_100ps_i1_nfs1/molecular_dynamics_runs/stage0000/task0003/stage0000_task0003.h5
+Reading /home/mtang11/experiments/ddmd_runs/test_100ps_i1_nfs1/molecular_dynamics_runs/stage0000/task0004/stage0000_task0004.h5
+Reading /home/mtang11/experiments/ddmd_runs/test_100ps_i1_nfs1/molecular_dynamics_runs/stage0000/task0005/stage0000_task0005.h5
+Reading /home/mtang11/experiments/ddmd_runs/test_100ps_i1_nfs1/molecular_dynamics_runs/stage0000/task0006/stage0000_task0006.h5
+Reading /home/mtang11/experiments/ddmd_runs/test_100ps_i1_nfs1/molecular_dynamics_runs/stage0000/task0007/stage0000_task0007.h5
+Reading /home/mtang11/experiments/ddmd_runs/test_100ps_i1_nfs1/molecular_dynamics_runs/stage0000/task0008/stage0000_task0008.h5
+Reading /home/mtang11/experiments/ddmd_runs/test_100ps_i1_nfs1/molecular_dynamics_runs/stage0000/task0009/stage0000_task0009.h5
+Reading /home/mtang11/experiments/ddmd_runs/test_100ps_i1_nfs1/molecular_dynamics_runs/stage0000/task0010/stage0000_task0010.h5
+Reading /home/mtang11/experiments/ddmd_runs/test_100ps_i1_nfs1/molecular_dynamics_runs/stage0000/task0011/stage0000_task0011.h5
+Subtract center of mass (CMS) from point cloud
+
+real	0m2.108s
+user	0m3.652s
+sys	0m2.499s

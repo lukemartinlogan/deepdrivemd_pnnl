@@ -1,0 +1,6 @@
+[submodule "submodules/MD-tools"]
+	path = submodules/MD-tools
+	url = https://github.com/candiceT233/MD-tools
+[submodule "submodules/molecules"]
+	path = submodules/molecules
+	url = https://github.com/braceal/molecules.git

@@ -1,0 +1,9 @@
+/tmp/root/spack-stage/spack-stage-hermes-pnnl-tz3s7yx4pybhryu4lwxfk24ot3gwf6xs/spack-src/src/api/hermes.cc:97 106742 LoadServerConfig Loading server configuration: /home/mtang11/scripts/deepdrivemd/examples/hermes_ddmd/hermes_configs/hermes_server.yaml
+/tmp/root/spack-stage/spack-stage-hermes-pnnl-tz3s7yx4pybhryu4lwxfk24ot3gwf6xs/spack-src/src/rpc_thallium.cc:28 106742 InitServer Initializing RPC server
+/tmp/root/spack-stage/spack-stage-hermes-pnnl-tz3s7yx4pybhryu4lwxfk24ot3gwf6xs/spack-src/src/rpc_thallium.cc:31 106742 InitServer Attempting to start server on: ofi+sockets://localhost:8080
+/tmp/root/spack-stage/spack-stage-hermes-pnnl-tz3s7yx4pybhryu4lwxfk24ot3gwf6xs/spack-src/src/rpc_thallium.cc:40 106742 InitServer Serving ofi+sockets://127.0.0.1:8080 (i.e., ofi+sockets://localhost:8080) with 4 RPC threads as node id 1
+/tmp/root/spack-stage/spack-stage-hermes-pnnl-tz3s7yx4pybhryu4lwxfk24ot3gwf6xs/spack-src/src/rpc_thallium.cc:54 106742 InitClient This client is on node 1 (i.e., localhost)
+/tmp/root/spack-stage/spack-stage-hermes-pnnl-tz3s7yx4pybhryu4lwxfk24ot3gwf6xs/spack-src/src/metadata_manager.h:524 106742 PrintDeviceInfo Device 0 is mounted on  with capacity 42949672960 bytes
+/tmp/root/spack-stage/spack-stage-hermes-pnnl-tz3s7yx4pybhryu4lwxfk24ot3gwf6xs/spack-src/src/metadata_manager.h:524 106742 PrintDeviceInfo Device 1 is mounted on /tmp/ddmd_test_slab1/slab_ssd with capacity 85899345920 bytes
+/tmp/root/spack-stage/spack-stage-hermes-pnnl-tz3s7yx4pybhryu4lwxfk24ot3gwf6xs/spack-src/src/metadata_manager.h:524 106742 PrintDeviceInfo Device 2 is mounted on /tmp/ddmd_test_slab2/slab_pfs with capacity 85899345920 bytes
+/tmp/root/spack-stage/spack-stage-hermes-pnnl-tz3s7yx4pybhryu4lwxfk24ot3gwf6xs/spack-src/src/rpc_thallium.cc:72 106742 RunDaemon Running the daemon on node: 1
