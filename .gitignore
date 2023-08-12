@@ -1,2 +1,6 @@
-
+# local path
 build/
+
+# submodules
+MD-tools/
+molecules/
