@@ -59,7 +59,7 @@ dependencies:
       - matplotlib==3.5.3
       - mccabe==0.7.0
       - mdanalysis==2.0.0
-      - mdtools==0.1
+      # - mdtools==0.1
       - mmtf-python==1.1.3
       - mrcfile==1.4.3
       - msgpack==1.0.5
